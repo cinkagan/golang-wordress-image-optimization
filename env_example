@@ -1,0 +1,5 @@
+MYSQL_HOST=localhost
+MYSQL_USER=your_wordpress_database_user
+MYSQL_PASSWORD=your_wordpress_database_password
+MYSQL_DBNAME=wordpress
+IMAGE_PATH=./uploads

@@ -1,7 +1,7 @@
 package models
 
 import (
-	"keyholders/config"
+	"wordpress/config"
 
 	_ "github.com/go-sql-driver/mysql"
 )

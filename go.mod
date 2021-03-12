@@ -1,4 +1,4 @@
-module keyholders
+module wordpress
 
 go 1.15
 

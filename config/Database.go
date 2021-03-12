@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"keyholders/helpers"
+	"wordpress/helpers"
 
 	"github.com/jinzhu/gorm"
 )

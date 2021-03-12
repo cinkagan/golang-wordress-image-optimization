@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"keyholders/config"
@@ -22,14 +23,12 @@ import (
 
 var dbError error
 var files []string
-var fileBlacklist []string
 var deletedFiles []string
 var fileCycle int32
 var fileContent string
 
 func main() {
 	fileCycle = 0
-	fileBlacklist = []string{"120x90", "150x150", "202x300", "404x600", "496x737", "584x438", "592x444", "690x1024", "758x564", "768x1140", "800x785", "783x600", "1024x784", "1170x785", "300x230", "496x380", "768x588", "584x309", "592x386", "496x239", "300x145", "592x309", "300x150", "496x249", "584x426", "592x426", "758x426", "768x385"}
 	// For db connection
 	config.DB, dbError = gorm.Open("mysql", config.DbURL(config.BuildDBConfig()))
 	if dbError != nil {
@@ -118,14 +117,13 @@ func fileCheckOnDb(file string) {
 	imagePath := imagePaths[len(imagePaths)-1]
 	fmt.Printf("%d --> %s is checking...\n", fileCycle, imagePath)
 
-	for _, item := range fileBlacklist {
-		if strings.Contains(imagePath, "-"+item) {
-			imagePath = strings.Replace(imagePath, "-"+item, "", -1)
-			break
-		}
+	r, _ := regexp.Compile(`(?m)[0-9]+x[0-9]+`)
+
+	if r.MatchString(imagePath) {
+		imagePath = strings.Replace(imagePath, "-"+r.FindString(imagePath), "", -1)
 	}
 
-	// //check whether s contains substring text
+	//check whether s contains substring text
 	if strings.Contains(fileContent, imagePath) {
 		count++
 		files = append(files, file)
@@ -144,32 +142,6 @@ func fileCheckOnDb(file string) {
 		fileOptimize(file)
 	}
 
-	// To search in the post table
-	// postResult, _ := models.GetSearchOnPost(imagePath)
-	// if len(postResult) > 0 {
-	// 	count++
-	// 	files = append(files, file)
-	// 	fmt.Printf("%d --> ***** File is using in the post table...\n", fileCycle)
-	// }
-	// // To search in the post_meta table
-	// metaResult, _ := models.GetSearchOnMeta(imagePath)
-	// if len(metaResult) > 0 {
-	// 	count++
-	// 	files = append(files, file)
-	// 	fmt.Printf("%d --> ***** File is using in the post_meta table...\n", fileCycle)
-	// }
-
-	// if count == 0 {
-	// 	fmt.Printf("%d --> ***** File is deleting...\n", fileCycle)
-	// 	e := os.Remove(file)
-	// 	if e != nil {
-	// 		log.Fatal(e)
-	// 	} else {
-	// 		deletedFiles = append(deletedFiles, file)
-	// 	}
-	// } else {
-	// 	fileOptimize(file)
-	// }
 }
 
 func fileOptimize(file string) {

@@ -12,9 +12,9 @@ import (
 	"regexp"
 	"strings"
 
-	"keyholders/config"
-	"keyholders/helpers"
-	"keyholders/models"
+	"wordpress/config"
+	"wordpress/helpers"
+	"wordpress/models"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
